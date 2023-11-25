@@ -3,14 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Math Quiz App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='LetterMath.css') }}">
+    <title>Math Quiz</title>
 </head>
 <body>
-    <div class="quiz-container">
-        <div id="problem"></div>
-        <div id="options"></div>
-        <div id="timer">10</div>
+    <div class="container">
+        <h1>Math Quiz</h1>
+        <p class="question">{{ num1 }} {{ operation }} {{ num2 }}?</p>
+        <form id="quizForm">
+            {% for key, value in choices.items() %}
+                <label>
+                    <input type="radio" name="answer" value="{{ key }}">
+                    {{ key }}. {{ value }}
+                </label><br>
+            {% endfor %}
+        </form>
+        <button onclick="submitForm()">Submit Answer</button>
     </div>
+    <script>
+        function submitForm() {
+            const form = document.getElementById('quizForm');
+            form.submit();
+        }
+    </script>
 </body>
 </html>
