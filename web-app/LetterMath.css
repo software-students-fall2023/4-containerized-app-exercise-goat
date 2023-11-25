@@ -1,0 +1,33 @@
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.quiz-container {
+    text-align: center;
+}
+
+#problem {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+#options {
+    display: flex;
+    justify-content: center;
+}
+
+#options div {
+    margin: 0 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#timer {
+    font-size: 30px;
+    margin-top: 20px;
+}
