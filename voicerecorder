@@ -1,0 +1,39 @@
+document.addEventListener('DOMContentLoaded', () => 
+{
+    const recordButton = document.getElementById('recordButton');
+    const stopButton = document.getElementById('stopButton');
+    const audioPlayback = document.getElementById('audioPlayback');
+    let mediaRecorder;
+    let audioChunks = [];
+
+    recordButton.addEventListener('click', () => 
+    {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => 
+                {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = e => 
+                {
+                    audioChunks.push(e.data);
+                };
+                mediaRecorder.onstop = () => 
+                {
+                    const audioBlob = new Blob(audioChunks);
+                    audioChunks = [];
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    audioPlayback.src = audioUrl;
+                };
+                mediaRecorder.start();
+                recordButton.disabled = true;
+                stopButton.disabled = false;
+            })
+            .catch(e => console.error(e));
+    });
+
+    stopButton.addEventListener('click', () => 
+    {
+        mediaRecorder.stop();
+        recordButton.disabled = false;
+        stopButton.disabled = true;
+    });
+});
