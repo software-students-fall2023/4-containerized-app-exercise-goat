@@ -9,22 +9,43 @@
 <body>
     <div class="container">
         <h1>Math Quiz</h1>
-        <p class="question">{{ num1 }} {{ operation }} {{ num2 }}?</p>
-        <form id="quizForm">
-            {% for key, value in choices.items() %}
+        <p class="question">{{ question.num1 }} {{ question.operation }} {{ question.num2 }}?</p>
+        <form id="quizForm" action="{{ url_for('check_answer') }}" method="post">
+            {% for key, value in question.choices.items() %}
                 <label>
                     <input type="radio" name="answer" value="{{ key }}">
                     {{ key }}. {{ value }}
                 </label><br>
             {% endfor %}
         </form>
-        <button onclick="submitForm()">Submit Answer</button>
+        <div id="error-message" class="error-message"></div>
     </div>
     <script>
-        function submitForm() {
-            const form = document.getElementById('quizForm');
-            form.submit();
+        function recognizeAnswer() {
+            const recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+            recognition.lang = 'en-US';
+            
+            recognition.onresult = function(event) {
+                const recognizedAnswer = event.results[0][0].transcript.toUpperCase();
+                
+                if (recognizedAnswer) {
+                    document.getElementById('quizForm').submit();
+                } else {
+                    displayErrorMessage('Please say the answer again.');
+                }
+            };
+            
+            recognition.start();
         }
+
+        function displayErrorMessage(message) {
+            const errorMessageElement = document.getElementById('error-message');
+            errorMessageElement.innerHTML = `<p class="error">${message}</p>`;
+        }
+
+        // Call recognizeAnswer() using the Web Speech API
+        // For simplicity, calling it after 10 seconds here
+        setTimeout(recognizeAnswer, 10000);
     </script>
 </body>
 </html>
