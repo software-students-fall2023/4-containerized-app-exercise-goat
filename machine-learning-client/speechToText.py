@@ -41,11 +41,9 @@ def run_quickstart(local_file_path) -> speech.RecognizeResponse:
     for result in response.results:
         output += f"Transcript: {result.alternatives[0].transcript}"
     return output 
-def main():
+def get_transcript():
     input_wav = 'machine-learning-client/input.wav'
     output_wav = 'machine-learning-client/curr.wav'
     convert_stereo_to_mono(input_wav,output_wav)
-    print(run_quickstart(output_wav))
+    return run_quickstart(output_wav)
 
-if __name__ == "__main__":
-    main()
