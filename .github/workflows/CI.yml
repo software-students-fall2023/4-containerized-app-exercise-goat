@@ -25,6 +25,7 @@ jobs:
           pipenv --python ${{ matrix.python-version }}
           pipenv install pytest
           pipenv install flask
+          pipenv install portaudio19-dev
           pipenv install pyaudio
           pipenv install google-cloud-speech
           pipenv install
