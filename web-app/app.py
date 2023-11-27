@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 import random
 
 app = Flask(__name__)
@@ -35,7 +35,7 @@ def generate_question():
 @app.route('/')
 def index():
     generate_question()
-    return render_template('index.html', question=current_question)
+    return send_from_directory('templates', 'LetterMath.html')  # Assuming your HTML file is in a 'templates' folder
 
 @app.route('/check_answer', methods=['POST'])
 def check_answer():
@@ -56,5 +56,4 @@ def check_answer():
         return jsonify({'is_correct': False, 'max_attempts_reached': False})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3000)
-
+    app.run(host='0.0.0.0', port=3000, debug=True)
