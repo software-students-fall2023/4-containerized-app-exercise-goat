@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Letter Math</title>
+    <title>Letter Math</title> <!-- Updated title -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,7 +33,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Letter Math</h1>
+        <h1>Letter Math</h1> <!-- Updated header -->
         <p class="question">{{ current_question.num1 }} {{ current_question.operation }} {{ current_question.num2 }}?</p>
         <form id="quizForm" action="{{ url_for('check_answer') }}" method="post">
             {% for key, value in current_question.choices.items() %}

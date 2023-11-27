@@ -10,7 +10,7 @@ def generate_question():
     global current_question
     # Generate a random addition or subtraction problem
     num1 = random.randint(1, 9)
-    num2 = random.randint(1, num1)
+    num2 = random.randint(1, 9)
     operation = random.choice(['+', '-'])
     correct_answer = str(eval(f"{num1} {operation} {num2}"))
 
