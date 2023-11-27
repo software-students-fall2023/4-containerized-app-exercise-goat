@@ -17,7 +17,7 @@ def save_current_audio(transcript,name,path='curr.wav'):
             'name': name,
         }
         result = collection.insert_one(file_document)
-        print(f"WAV file inserted with _id: {result.inserted_id}, time: {result.time}")
+        print(f"WAV file inserted with _id: {result.inserted_id}")
 def get_most_recent_audio():
     try:
         documents_with_time = collection.find({'time': {'$exists': True}})
