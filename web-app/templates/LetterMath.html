@@ -35,40 +35,66 @@
     <div class="container">
         <h1>Letter Math</h1>
         <p class="question">{{ current_question.num1 }} {{ current_question.operation }} {{ current_question.num2 }}?</p>
-        <form id="quizForm" action="{{ url_for('check_answer') }}" method="post">
+        <form id="quizForm" action="{{ url_for('check_answer') }}" method="post" enctype="multipart/form-data">
             {% for key, value in current_question.choices.items() %}
                 <label>
                     <input type="radio" name="answer" value="{{ key }}">
                     {{ key }}. {{ value }}
                 </label><br>
             {% endfor %}
+            <label for="audioFile">Upload Recorded Audio:</label>
+            <input type="file" id="audioFile" name="audioFile" accept="audio/*" capture="microphone">
         </form>
         <div id="error-message" class="error-message"></div>
+
+        <button id="recordButton">Record</button>
+        <button id="stopButton" disabled>Stop</button>
+        <audio id="audioPlayback" controls></audio>
     </div>
+
     <script>
-        function recognizeAnswer() {
-            const recognition = new webkitSpeechRecognition() || new SpeechRecognition();
-            recognition.lang = 'en-US';
+        document.addEventListener('DOMContentLoaded', () => {
+            const recordButton = document.getElementById('recordButton');
+            const stopButton = document.getElementById('stopButton');
+            const audioPlayback = document.getElementById('audioPlayback');
+            const audioFileInput = document.getElementById('audioFile');
+            let mediaRecorder;
+            let audioChunks = [];
 
-            recognition.onresult = function(event) {
-                const recognizedAnswer = event.results[0][0].transcript.toUpperCase();
+            recordButton.addEventListener('click', () => {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        mediaRecorder = new MediaRecorder(stream);
+                        mediaRecorder.ondataavailable = e => {
+                            audioChunks.push(e.data);
+                        };
+                        mediaRecorder.onstop = () => {
+                            const audioBlob = new Blob(audioChunks);
+                            audioChunks = [];
+                            const audioUrl = URL.createObjectURL(audioBlob);
+                            audioPlayback.src = audioUrl;
 
-                if (recognizedAnswer) {
-                    document.getElementById('quizForm').submit();
-                } else {
-                    displayErrorMessage('Please say the answer again.');
-                }
-            };
+                            const formData = new FormData();
+                            formData.append('audioFile', audioBlob);
 
-            recognition.start();
-        }
+                            fetch('/upload-audio', {
+                                method: 'POST',
+                                body: formData,
+                            });
+                        };
+                        mediaRecorder.start();
+                        recordButton.disabled = true;
+                        stopButton.disabled = false;
+                    })
+                    .catch(e => console.error(e));
+            });
 
-        function displayErrorMessage(message) {
-            const errorMessageElement = document.getElementById('error-message');
-            errorMessageElement.innerHTML = `<p class="error">${message}</p>`;
-        }
-
-        setTimeout(recognizeAnswer, 10000);
+            stopButton.addEventListener('click', () => {
+                mediaRecorder.stop();
+                recordButton.disabled = false;
+                stopButton.disabled = true;
+            });
+        });
     </script>
 </body>
 </html>
