@@ -10,7 +10,7 @@ class AudioRecorder:
         me.frames = []
         me.is_recording = False
     def start_recording(me):
-        me.stream = me.audio.open(format=pyaudio.paInt16, channels=2, rate=44100, input=True, frames_per_buffer=1024)
+        me.stream = me.audio.open(format=pyaudio.paInt16, channels=1, rate=44100, input=True, frames_per_buffer=1024)
         me.is_recording = True
         threading.Thread(target=me.record).start()
     def stop_recording(me):
@@ -20,10 +20,10 @@ class AudioRecorder:
             data = me.stream.read(1024)
             me.frames.append(data)
     def save_recording(me, filename):
-        full_path = "C:\\Users\\YourUsername\\Documents\\" + filename
+        full_path =  filename
         #where to save the wavefiles.
         waveFile = wave.open(filename, 'wb')
-        waveFile.setnchannels(2)
+        waveFile.setnchannels(1)
         waveFile.setsampwidth(me.audio.get_sample_size(pyaudio.paInt16))
         waveFile.setframerate(44100)
         waveFile.writeframes(b''.join(me.frames))
@@ -34,14 +34,15 @@ def record_audio():
     stop_button.config(state=tk.NORMAL)
 def stop_audio():
     audio_recorder.stop_recording()
-    audio_recorder.save_recording("recorded_file.wav")
+    audio_recorder.save_recording("input.wav")
     record_button.config(state=tk.NORMAL)
     stop_button.config(state=tk.DISABLED)
-audio_recorder = AudioRecorder()
 window = tk.Tk()
 window.title("Audio Recorder")
+audio_recorder = AudioRecorder()
 record_button = tk.Button(window, text="Record", command=record_audio)
-record_button.pack()
 stop_button = tk.Button(window, text="Stop", state=tk.DISABLED, command=stop_audio)
-stop_button.pack()
-window.mainloop()
+def test():
+    record_button.pack()
+    stop_button.pack()
+    window.mainloop()

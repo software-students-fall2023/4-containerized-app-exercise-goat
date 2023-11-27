@@ -11,7 +11,7 @@ def convert_stereo_to_mono(input_wav, output_wav):
 
     # Convert stereo to mono
     audio = audio.set_channels(1)
-
+    
     # Export the mono audio to a new WAV file
     audio.export(output_wav, format="wav")
 def run_quickstart(local_file_path) -> speech.RecognizeResponse:
@@ -42,8 +42,9 @@ def run_quickstart(local_file_path) -> speech.RecognizeResponse:
         output += f"Transcript: {result.alternatives[0].transcript}"
     return output 
 def get_transcript():
-    input_wav = 'machine-learning-client/input.wav'
-    output_wav = 'machine-learning-client/curr.wav'
+    input_wav = 'input.wav'
+    output_wav = 'curr.wav'
     convert_stereo_to_mono(input_wav,output_wav)
     return run_quickstart(output_wav)
+print(get_transcript())
 
