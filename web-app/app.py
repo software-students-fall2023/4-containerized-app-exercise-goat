@@ -1,7 +1,10 @@
 import random
+import os
 from flask import Flask, jsonify, request, render_template
 
 app = Flask(__name__, template_folder='templates')
+UPLOAD_FOLDER = 'uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 current_question = None
 attempts = 0
@@ -41,7 +44,10 @@ def index():
 def check_answer():
     global attempts
     user_answer = request.form.get('answer')
-    is_correct = user_answer == 'A'  # For simplicity, assuming 'A' is always correct
+    correct_answer = current_question['correct_answer']
+
+    is_correct = user_answer == correct_answer
+
     attempts += 1
 
     if is_correct:
@@ -55,5 +61,17 @@ def check_answer():
     else:
         return jsonify({'is_correct': False, 'max_attempts_reached': False})
 
+@app.route('/upload-audio', methods=['POST'])
+def upload_audio():
+    audio_file = request.files.get('audioFile')
+    if audio_file:
+        save_path = os.path.join(app.config['UPLOAD_FOLDER'], audio_file.filename)
+        audio_file.save(save_path)
+        # Store the file path or other relevant information in your database
+
+    return jsonify({'message': 'Audio file uploaded successfully'})
+
 if __name__ == '__main__':
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
     app.run(host='0.0.0.0', port=3000, debug=True)
