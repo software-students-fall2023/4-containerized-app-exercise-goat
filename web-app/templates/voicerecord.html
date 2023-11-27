@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Recorder</title>
+</head>
+<body>
+    <button id="startRecording">Start Recording</button>
+    <button id="stopRecording" disabled>Stop Recording</button>
+    <audio id="audioPlayer" controls></audio>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const startRecordingBtn = document.getElementById('startRecording');
+            const stopRecordingBtn = document.getElementById('stopRecording');
+            const audioPlayer = document.getElementById('audioPlayer');
+
+            let mediaRecorder;
+            let audioChunks = [];
+
+            startRecordingBtn.addEventListener('click', startRecording);
+            stopRecordingBtn.addEventListener('click', stopRecording);
+
+            async function startRecording() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                    mediaRecorder = new MediaRecorder(stream);
+
+                    mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0) {
+                            audioChunks.push(event.data);
+                        }
+                    };
+
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        
+
+                        const formData = new FormData();
+                        formData.append('audio', audioBlob, 'recorded.wav');
+                        console.log('audio uploading')
+                        const response = await fetch('/upload-audio', {
+                            method: 'POST',
+                            body: formData,
+                        });
+
+                    };
+
+                    mediaRecorder.start();
+                    startRecordingBtn.disabled = true;
+                    stopRecordingBtn.disabled = false;
+                } catch (error) {
+                    console.error('Error accessing microphone:', error);
+                }
+            }
+
+            function stopRecording() {
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                    console.log('audio uploading')
+                    startRecordingBtn.disabled = false;
+                    stopRecordingBtn.disabled = true;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
