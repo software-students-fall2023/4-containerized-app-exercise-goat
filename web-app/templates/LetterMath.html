@@ -33,10 +33,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Math Quiz</h1>
-        <p class="question">{{ question.num1 }} {{ question.operation }} {{ question.num2 }}?</p>
+        <h1>Letter Math</h1>
+        <p class="question">{{ current_question.num1 }} {{ current_question.operation }} {{ current_question.num2 }}?</p>
         <form id="quizForm" action="{{ url_for('check_answer') }}" method="post">
-            {% for key, value in question.choices.items() %}
+            {% for key, value in current_question.choices.items() %}
                 <label>
                     <input type="radio" name="answer" value="{{ key }}">
                     {{ key }}. {{ value }}

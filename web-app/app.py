@@ -1,7 +1,7 @@
 import random
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, render_template
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 current_question = None
 attempts = 0
@@ -10,7 +10,7 @@ def generate_question():
     global current_question
     # Generate a random addition or subtraction problem
     num1 = random.randint(1, 9)
-    num2 = random.randint(1, 9)
+    num2 = random.randint(1, num1)
     operation = random.choice(['+', '-'])
     correct_answer = str(eval(f"{num1} {operation} {num2}"))
 
@@ -35,7 +35,7 @@ def generate_question():
 @app.route('/')
 def index():
     generate_question()
-    return send_from_directory('templates', 'LetterMath.html')  # Assuming your HTML file is in a 'templates' folder
+    return render_template('LetterMath.html', current_question=current_question)
 
 @app.route('/check_answer', methods=['POST'])
 def check_answer():
