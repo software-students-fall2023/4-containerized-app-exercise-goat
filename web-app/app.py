@@ -1,6 +1,7 @@
 import random
 import os
 from flask import Flask, jsonify, request, render_template
+from pydub import AudioSegment
 import wave 
 
 app = Flask(__name__, template_folder='templates')
@@ -39,7 +40,7 @@ def generate_question():
 @app.route('/')
 def index():
     generate_question()
-    return render_template('voicerecord.html', current_question=current_question)
+    return render_template('LetterMath.html', current_question=current_question)
 
 @app.route('/check_answer', methods=['POST'])
 def check_answer():
@@ -64,28 +65,30 @@ def check_answer():
 
 @app.route('/upload-audio', methods=['POST'])
 def upload_audio():
-    print('receive audio uploads')
-    audio_file = request.files.get('audio')
-    #audio_file = request.files.get('audioFile')
-    print(audio_file)
-    if audio_file:
-        save_path = os.path.join(app.config['UPLOAD_FOLDER'], audio_file.filename)
-        audio_file.save(save_path)
-        # Store the file path or other relevant information in your database
-    #convert_blob_file_to_wav()
-    print('done')
-    return jsonify({'message': 'Audio file uploaded successfully'})
-def convert_blob_file_to_wav(input_file_path='uploads/blob', output_file_path='output.wav'):
-    with open(input_file_path, 'rb') as blob_file:
-        blob_data = blob_file.read()
+    if request.method == "POST":
+        f= request.files['audio_data']
+        with open('audio.wav', 'wb') as audio:
+            f.save(audio)
+        print('file uploaded successfully')
 
-    with wave.open(output_file_path, 'wb') as wav_file:
-        wav_file.setnchannels(1)
-        wav_file.setsampwidth(2)
-        wav_file.setframerate(44100)
-        wav_file.writeframes(blob_data)
+        return render_template('LetterMath.html')
+    else:
+        return render_template("LetterMath.html")
+    '''if audio_file:
+        save_path = os.path.join(app.config['UPLOAD_FOLDER'], 'audio.wav')
+        audio_file.save(save_path)
+
+        return jsonify({'message': 'Audio file uploaded successfully', 'transcription': 'transcription_result'})'''
+def check_file():
+    audio = AudioSegment.from_file("uploads/blob")
+    print("Channels:", audio.channels)
+    print("Sample Width (bytes):", audio.sample_width)
+    print("Sample Rate (Hz):", audio.frame_rate)
+
 if __name__ == '__main__':
+    check_file()
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
     #convert_blob_file_to_wav()
     app.run(host='0.0.0.0', port=3000, debug=True)
+
