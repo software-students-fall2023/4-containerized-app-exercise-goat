@@ -50,49 +50,60 @@
         <button id="recordButton">Record</button>
         <button id="stopButton" disabled>Stop</button>
         <audio id="audioPlayback" controls></audio>
+        <div id="upload_button"></div>
     </div>
-
+    <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
     <script>
+        //this method of gathering audio input is inspired by this post: https://stackoverflow.com/questions/60032983/record-voice-with-recorder-js-and-upload-it-to-python-flask-server-but-wav-file
         document.addEventListener('DOMContentLoaded', () => {
             const recordButton = document.getElementById('recordButton');
             const stopButton = document.getElementById('stopButton');
             const audioPlayback = document.getElementById('audioPlayback');
-            const audioFileInput = document.getElementById('audioFile');
-            let mediaRecorder;
+            let audioContext;
+            let input;
+            let rec;
+            let gumStream;
             let audioChunks = [];
-
+    
             recordButton.addEventListener('click', () => {
-                navigator.mediaDevices.getUserMedia({ audio: true })
+                recordButton.disabled = true;
+                stopButton.disabled = false;
+                navigator.mediaDevices.getUserMedia({ audio: true, video: false })
                     .then(stream => {
-                        mediaRecorder = new MediaRecorder(stream);
-                        mediaRecorder.ondataavailable = e => {
-                            audioChunks.push(e.data);
-                        };
-                        mediaRecorder.onstop = () => {
-                            const audioBlob = new Blob(audioChunks);
-                            audioChunks = [];
-                            const audioUrl = URL.createObjectURL(audioBlob);
-                            audioPlayback.src = audioUrl;
-
-                            const formData = new FormData();
-                            formData.append('audioFile', audioBlob);
-
-                            fetch('/upload-audio', {
-                                method: 'POST',
-                                body: formData,
-                            });
-                        };
-                        mediaRecorder.start();
-                        recordButton.disabled = true;
-                        stopButton.disabled = false;
+                        audioContext = new AudioContext();
+                        gumStream = stream;
+                        input = audioContext.createMediaStreamSource(stream);
+                        rec = new Recorder(input, { numChannels: 1 });
+                        rec.record();
                     })
                     .catch(e => console.error(e));
             });
+    
+            function stop_record() {
+                rec.stop();
+                gumStream.getAudioTracks()[0].stop();
+                rec.exportWAV(sendAudioToServer);
+            }
+    
+            function sendAudioToServer(blob) {
+                const formData = new FormData();
+                formData.append('audio_data', blob, 'audio.wav');
 
+                fetch('/upload-audio', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => console.error(error));
+            }
+    
             stopButton.addEventListener('click', () => {
-                mediaRecorder.stop();
                 recordButton.disabled = false;
                 stopButton.disabled = true;
+                stop_record();
             });
         });
     </script>
