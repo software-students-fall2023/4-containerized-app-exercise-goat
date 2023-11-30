@@ -11,7 +11,6 @@ def save(name):
     print(transcript)
     db.save_current_audio(transcript,name)
 
-
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Please provide a function name.")

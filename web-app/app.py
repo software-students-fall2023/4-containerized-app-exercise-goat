@@ -2,7 +2,8 @@ import random
 import os
 from flask import Flask, jsonify, request, render_template
 from pydub import AudioSegment
-import wave 
+import db 
+import requests
 
 app = Flask(__name__, template_folder='templates')
 UPLOAD_FOLDER = 'uploads'
@@ -36,6 +37,13 @@ def generate_question():
         'correct_answer': correct_answer,
         'choices': choices
     }
+def get_transcript():
+    target_url = 'http://localhost:3000/transcript'
+    response = request.get(target_url)
+    if (response):
+        transcript = db.get_most_recent_transcript()
+        return transcript
+    return "there is an error fetching a transcript"
 
 @app.route('/')
 def index():
@@ -62,18 +70,17 @@ def check_answer():
         return jsonify({'is_correct': False, 'next_question': current_question, 'max_attempts_reached': True})
     else:
         return jsonify({'is_correct': False, 'max_attempts_reached': False})
-
 @app.route('/upload-audio', methods=['POST'])
 def upload_audio():
     if request.method == "POST":
         f= request.files['audio_data']
-        with open('audio.wav', 'wb') as audio:
+        with open('uploads/audio.wav', 'wb') as audio:
             f.save(audio)
         print('file uploaded successfully')
 
-        return render_template('LetterMath.html')
+        return render_template('LetterMath.html',current_question=current_question)
     else:
-        return render_template("LetterMath.html")
+        return render_template("LetterMath.html",current_question=current_question)
     '''if audio_file:
         save_path = os.path.join(app.config['UPLOAD_FOLDER'], 'audio.wav')
         audio_file.save(save_path)
@@ -86,9 +93,9 @@ def check_file():
     print("Sample Rate (Hz):", audio.frame_rate)
 
 if __name__ == '__main__':
-    check_file()
+    #check_file()
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
     #convert_blob_file_to_wav()
-    app.run(host='0.0.0.0', port=3000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
 

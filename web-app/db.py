@@ -1,7 +1,7 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime
-import os
+
 uri = "mongodb+srv://2SEProjectDatabase:ThisIsThePassword123@cluster0.21yazmx.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(uri, tlsAllowInvalidCertificates=True, server_api=ServerApi('1'))
 databaseclient = client["account"]

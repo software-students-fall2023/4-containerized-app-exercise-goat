@@ -7,7 +7,7 @@ client = MongoClient(uri, tlsAllowInvalidCertificates=True, server_api=ServerApi
 databaseclient = client["account"]
 database = databaseclient['account']
 collection = databaseclient["Username+Password"]
-def save_current_audio(transcript,name,path='curr.wav'):
+def save_transcript(transcript,name,path='curr.wav'):
     with open(path, 'rb') as file:
         file_data = file.read()
         file_document={
@@ -18,9 +18,10 @@ def save_current_audio(transcript,name,path='curr.wav'):
         }
         result = collection.insert_one(file_document)
         print(f"WAV file inserted with _id: {result.inserted_id}")
-def get_most_recent_audio():
+
+def get_most_recent_audio(Id):
     try:
-        documents_with_time = collection.find({'time': {'$exists': True}})
+        documents_with_time = collection.find({'id':Id, 'time': {'$exists': True}})
 
         if documents_with_time.count() == 0:
             return None  
@@ -29,3 +30,4 @@ def get_most_recent_audio():
     except Exception as e:
         print(f"Error: {e}")
         return None
+

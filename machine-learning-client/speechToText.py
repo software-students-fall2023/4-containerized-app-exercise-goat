@@ -1,18 +1,11 @@
-
-# Imports the Google Cloud client library
-
-
 from google.cloud import speech
 from pydub import AudioSegment
 import io
 def convert_stereo_to_mono(input_wav, output_wav):
-    # Load the stereo audio file
     audio = AudioSegment.from_wav(input_wav)
 
-    # Convert stereo to mono
     audio = audio.set_channels(1)
     
-    # Export the mono audio to a new WAV file
     audio.export(output_wav, format="wav")
 def run_quickstart(local_file_path) -> speech.RecognizeResponse:
     # Instantiates a client
@@ -30,11 +23,10 @@ def run_quickstart(local_file_path) -> speech.RecognizeResponse:
 
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=44100,
+        sample_rate_hertz=48000,
         language_code="en-US",
     )
 
-    # Detects speech in the audio file
     response = client.recognize(config=config, audio=audio)
     print(response)
     output = ""
@@ -42,9 +34,7 @@ def run_quickstart(local_file_path) -> speech.RecognizeResponse:
         output += f"Transcript: {result.alternatives[0].transcript}"
     return output 
 def get_transcript():
-    input_wav = 'input.wav'
+    input_wav = 'uploads/audio.wav'
     output_wav = 'curr.wav'
     convert_stereo_to_mono(input_wav,output_wav)
     return run_quickstart(output_wav)
-print(get_transcript())
-

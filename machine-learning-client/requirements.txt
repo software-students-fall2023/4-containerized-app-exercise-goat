@@ -1,0 +1,5 @@
+google-cloud-speech
+pydub
+Flask
+pymongo
+datetime
