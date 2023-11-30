@@ -29,6 +29,7 @@ jobs:
           pipenv install flask
           pipenv install PyAudio
           pipenv install google-cloud-speech
+          pipenv install pydub
           pipenv install --dev
       - name: Turn on 'editable' mode
         run: |
