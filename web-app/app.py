@@ -1,6 +1,6 @@
 import random
 import os
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, redirect, url_for
 from pydub import AudioSegment
 import db 
 import requests
@@ -39,7 +39,7 @@ def generate_question():
     }
 def get_transcript():
     target_url = 'http://localhost:3000/transcript'
-    response = request.get(target_url)
+    response = requests.get(target_url)
     if (response):
         transcript = db.get_most_recent_transcript()
         return transcript
@@ -47,8 +47,10 @@ def get_transcript():
 
 @app.route('/')
 def index():
-    generate_question()
-    return render_template('LetterMath.html', current_question=current_question)
+    transcript=request.args.get('transcript')
+    if not transcript:
+        generate_question()
+    return render_template('LetterMath.html', current_question=current_question, transcript=transcript)
 
 @app.route('/check_answer', methods=['POST'])
 def check_answer():
@@ -77,8 +79,11 @@ def upload_audio():
         with open('uploads/audio.wav', 'wb') as audio:
             f.save(audio)
         print('file uploaded successfully')
-
-        return render_template('LetterMath.html',current_question=current_question)
+        transcript= get_transcript() or "no transcript"
+        print(transcript)
+        url = f'/?transcript={transcript}'
+        return redirect(url_for('index', transcript=transcript))
+        #return render_template('LetterMath.html',current_question=current_question, transcript=transcript)
     else:
         return render_template("LetterMath.html",current_question=current_question)
     '''if audio_file:
@@ -97,5 +102,6 @@ if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
     #convert_blob_file_to_wav()
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=4000)
+
 

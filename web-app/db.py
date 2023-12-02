@@ -10,9 +10,6 @@ collection = databaseclient["Username+Password"]
 def get_most_recent_transcript():
     try:
         documents_with_time = collection.find({'time': {'$exists': True}})
-
-        if documents_with_time.count() == 0:
-            return None  
         most_recent_document = max(documents_with_time, key=lambda x: x['time'])
         return most_recent_document['transcript']
     except Exception as e:

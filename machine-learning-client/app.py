@@ -6,11 +6,14 @@ import wave
 app = Flask(__name__)
 
 @app.route('/transcript', methods=['GET'])
-def recognize_and_save():
+def recognize_and_save(Id=1):
     Id = request.args.get('Id')
+    #print(Id)
     transcript = speechToText.get_transcript()
+    #print(transcript)
     db.save_transcript(transcript,Id)
     response = make_response(jsonify({'message': 'transcript saved!'}))
+    return response
 
 def save_wav_file(audio_data, output_file_path='input.wav'):
     with wave.open(output_file_path, 'wb') as wav_file:
