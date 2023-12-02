@@ -52,6 +52,10 @@
         <audio id="audioPlayback" controls></audio>
         <div id="upload_button"></div>
     </div>
+    {% if transcript %}
+        <div>Your answer:</div>
+        <div class="transcript">{{ transcript }}</div>
+    {% endif %}
     <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
     <script>
         //this method of gathering audio input is inspired by this post: https://stackoverflow.com/questions/60032983/record-voice-with-recorder-js-and-upload-it-to-python-flask-server-but-wav-file
