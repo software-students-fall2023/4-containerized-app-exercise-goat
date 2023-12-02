@@ -31,7 +31,7 @@ def run_quickstart(local_file_path) -> speech.RecognizeResponse:
     print(response)
     output = ""
     for result in response.results:
-        output += f"Transcript: {result.alternatives[0].transcript}"
+        output += f"{result.alternatives[0].transcript}"
     return output 
 def get_transcript():
     input_wav = 'uploads/audio.wav'
