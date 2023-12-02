@@ -1,6 +1,6 @@
 import random
 import os
-from flask import Flask, jsonify, request, render_template, redirect, url_for
+from flask import Flask, jsonify, request, render_template, redirect, url_for, make_response
 from pydub import AudioSegment
 import db 
 import requests
@@ -82,7 +82,8 @@ def upload_audio():
         transcript= get_transcript() or "no transcript"
         print(transcript)
         url = f'/?transcript={transcript}'
-        return redirect(url_for('index', transcript=transcript))
+        response = make_response(jsonify({'transcript': transcript}))
+        return response
         #return render_template('LetterMath.html',current_question=current_question, transcript=transcript)
     else:
         return render_template("LetterMath.html",current_question=current_question)
