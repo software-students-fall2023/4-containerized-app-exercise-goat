@@ -12,7 +12,7 @@ sys.modules['voicerecorder'] = Mock()
 sys.modules['db'] = Mock()
 sys.modules['speechToText'] = Mock()
 
-import main
+from main import main
 import voicerecorder
 
 @pytest.fixture
