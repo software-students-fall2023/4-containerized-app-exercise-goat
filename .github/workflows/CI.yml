@@ -36,7 +36,7 @@ jobs:
           pipenv install -e .
       - name: Test with pytest
         run: |
-          pipenv run python -m pytest test_WA.py
+          pipenv run python -m pytest /home/runner/work/4-containerized-app-exercise-goat/4-containerized-app-exercise-goat/webb-app/test_WA.py
       - name: Test with pytest
         run: |
-          pipenv run python -m pytest test_ML.py
+          pipenv run python -m pytest /home/runner/work/4-containerized-app-exercise-goat/4-containerized-app-exercise-goat/machine-learning-client/test_ML.py
