@@ -38,13 +38,12 @@ def generate_question():
         'choices': choices
     }
 def get_transcript():
-    target_url = 'http://localhost:3000/transcript'
+    target_url = 'http://mlc:3000/transcript'
     response = requests.get(target_url)
     if (response):
         transcript = db.get_most_recent_transcript()
         return transcript
     return "there is an error fetching a transcript"
-
 @app.route('/')
 def index():
     transcript=request.args.get('transcript')
