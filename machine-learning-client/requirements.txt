@@ -3,3 +3,5 @@ pydub
 Flask
 pymongo
 datetime
+fuzzywuzzy
+pytest

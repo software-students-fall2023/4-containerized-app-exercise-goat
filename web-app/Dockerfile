@@ -10,7 +10,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 
-COPY . /app
+RUN git clone --depth 1 --branch main https://github.com/software-students-fall2023/4-containerized-app-exercise-goat.git /web-app
 
 EXPOSE 3000
 

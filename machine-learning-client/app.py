@@ -21,5 +21,9 @@ def save_wav_file(audio_data, output_file_path='input.wav'):
         wav_file.setsampwidth(2) 
         wav_file.setframerate(44100)  
         wav_file.writeframes(audio_data)
+@app.route('/',methods=['GET'])
+def test():
+    response = make_response(jsonify({'message': 'hi'}))
+    return response 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000)
