@@ -25,10 +25,6 @@
             margin-bottom: 20px;
         }
 
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
@@ -42,25 +38,24 @@
                     {{ key }}. {{ value }}
                 </label><br>
             {% endfor %}
-            <label for="audioFile">Upload Recorded Audio:</label>
-            <input type="file" id="audioFile" name="audioFile" accept="audio/*" capture="microphone">
+            
         </form>
         <div id="error-message" class="error-message"></div>
 
         <button id="recordButton">Record</button>
         <button id="stopButton" disabled>Stop</button>
-        <audio id="audioPlayback" controls></audio>
-        <div id="upload_button"></div>
+        
     </div>
         <div>Your answer:</div>
         <div id="transcript"></div>
+        <div id="isRight"></div>
     <script src="https://cdn.jsdelivr.net/gh/mattdiamond/Recorderjs@08e7abd9/dist/recorder.js"></script>
     <script>
         //this method of gathering audio input is inspired by this post: https://stackoverflow.com/questions/60032983/record-voice-with-recorder-js-and-upload-it-to-python-flask-server-but-wav-file
         document.addEventListener('DOMContentLoaded', () => {
             const recordButton = document.getElementById('recordButton');
             const stopButton = document.getElementById('stopButton');
-            const audioPlayback = document.getElementById('audioPlayback');
+            
             let audioContext;
             let input;
             let rec;
@@ -97,6 +92,9 @@
                 .then(response => response.json())
                 .then(data => {
                     const transcript=data.transcript;
+                    const isRight=data.isRight;
+                    const isRight_text = document.getElementById('isRight');
+                    isRight_text.innerText=isRight;
                     console.log('received transcript');
                     const transcript_text = document.getElementById('transcript');
                     transcript_text.innerText=transcript;
