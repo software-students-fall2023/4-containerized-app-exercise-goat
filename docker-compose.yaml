@@ -6,7 +6,7 @@ services:
     ports:
       - "4000:4000"
     depends_on:
-      - mongodb
+      - db
       - mlc
     volumes:
       - uploadedfiles:/app/uploads
@@ -15,7 +15,7 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - mongodb
+      - db
     volumes:
       - uploadedfiles:/app/uploads
   db:
