@@ -7,6 +7,7 @@ services:
       - "4000:4000"
     depends_on:
       - mongodb
+      - mlc
     volumes:
       - uploadedfiles:/app/uploads
   mlc:
@@ -17,7 +18,7 @@ services:
       - mongodb
     volumes:
       - uploadedfiles:/app/uploads
-  mongodb:
+  db:
     image: mongo
     ports:
       - "27017:27017"

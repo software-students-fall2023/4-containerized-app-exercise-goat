@@ -2,7 +2,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime
 import os
-client = MongoClient('localhost', 27017)
+client = MongoClient("mongodb://db:27017")
 db = client['project4']
 collection = db['savehere']
 def save_transcript(transcript,name,path='curr.wav'):
