@@ -70,6 +70,8 @@ def upload_audio():
         print('file uploaded successfully')
         transcript= get_transcript() or "no transcript"
         print(transcript)
+        print(correct_answer)
+        transcript = str(transcript.strip())
         if transcript == correct_answer:
             isRight = "True"
         else:
