@@ -31,13 +31,14 @@
         }
 
         .info {
-            padding-left: 150px;
-        }
+        display: inline-block;
+        width: 150px; /* Adjust the width as needed */
+        padding-left: 150px; /* Adjust the padding as needed */
+    }
 
-        .answer {
-            padding-top: 100px;
-            padding-left: 300px;
-        }
+    .answer {
+        display: inline-block;
+    }
 
         .result.correct {
             text-align: center;
@@ -57,7 +58,7 @@
             padding-left: 150px;
             padding-top: 100px;
         }
-    </style>ß
+    </style>
 </head>
 <body>
     <div class="container">
@@ -67,7 +68,7 @@
         </div>
 
         <div class="info">Your Answer:</div>
-        <div id="transcript" class="answer"></div>ß
+        <div id="transcript" class="answer"></div>
 
         <div class="info">Correct Answer:</div>
         <div id="correct_answer" class="answer"></div>
