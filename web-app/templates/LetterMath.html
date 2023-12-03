@@ -41,6 +41,7 @@
         <div>Your answer:</div>
         <div id="transcript"></div>
         <div id="isRight"></div>
+        <div id="correct_answer"></div>
     <script src="https://cdn.jsdelivr.net/gh/mattdiamond/Recorderjs@08e7abd9/dist/recorder.js"></script>
     <script>
         //this method of gathering audio input is inspired by this post: https://stackoverflow.com/questions/60032983/record-voice-with-recorder-js-and-upload-it-to-python-flask-server-but-wav-file
@@ -87,6 +88,8 @@
                     const isRight=data.isRight;
                     const isRight_text = document.getElementById('isRight');
                     isRight_text.innerText=isRight;
+                    const correct_answer_text = document.getElementById('correct_answer');
+                    correct_answer_text.innerText=data.correct_answer;
                     console.log('received transcript');
                     const transcript_text = document.getElementById('transcript');
                     transcript_text.innerText=transcript;

@@ -76,16 +76,11 @@ def upload_audio():
             isRight = "True"
         else:
             isRight = "False"
-        response = make_response(jsonify({'transcript': transcript, 'isRight': isRight}))
+        response = make_response(jsonify({'transcript': transcript, 'isRight': isRight, 'correct_answer': correct_answer}))
         return response
-        #return render_template('LetterMath.html',current_question=current_question, transcript=transcript)
     else:
         return render_template("LetterMath.html",current_question=current_question)
-    '''if audio_file:
-        save_path = os.path.join(app.config['UPLOAD_FOLDER'], 'audio.wav')
-        audio_file.save(save_path)
-
-        return jsonify({'message': 'Audio file uploaded successfully', 'transcription': 'transcription_result'})'''
+    
 def check_file():
     audio = AudioSegment.from_file("uploads/blob")
     print("Channels:", audio.channels)
@@ -98,5 +93,4 @@ if __name__ == '__main__':
         os.makedirs(app.config['UPLOAD_FOLDER'])
     #convert_blob_file_to_wav()
     app.run(host='0.0.0.0', port=4000)
-
-
+    
