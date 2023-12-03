@@ -31,15 +31,7 @@
     <div class="container">
         <h1>Letter Math</h1>
         <div id ="current-question">{{ current_question.num1 }} {{ current_question.operation }} {{ current_question.num2 }}?</div>
-        <form id="quizForm" action="{{ url_for('check_answer') }}" method="post" enctype="multipart/form-data">
-            {% for key, value in current_question.choices.items() %}
-                <label>
-                    <input type="radio" name="answer" value="{{ key }}">
-                    {{ key }}. {{ value }}
-                </label><br>
-            {% endfor %}
-            
-        </form>
+        
         <div id="error-message" class="error-message"></div>
 
         <button id="recordButton">Record</button>
