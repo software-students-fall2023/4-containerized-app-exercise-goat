@@ -11,7 +11,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 current_question = None
 attempts = 0
-correct_answer = ""
+correct_answer = "1"
 
 def generate_question():
     global current_question
@@ -93,4 +93,3 @@ if __name__ == '__main__':
         os.makedirs(app.config['UPLOAD_FOLDER'])
     #convert_blob_file_to_wav()
     app.run(host='0.0.0.0', port=4000)
-    
