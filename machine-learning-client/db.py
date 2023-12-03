@@ -2,11 +2,9 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime
 import os
-uri = "mongodb+srv://2SEProjectDatabase:ThisIsThePassword123@cluster0.21yazmx.mongodb.net/?retryWrites=true&w=majority"
-client = MongoClient(uri, tlsAllowInvalidCertificates=True, server_api=ServerApi('1'))
-databaseclient = client["account"]
-database = databaseclient['account']
-collection = databaseclient["Username+Password"]
+client = MongoClient('localhost', 27017)
+db = client['project4']
+collection = db['savehere']
 def save_transcript(transcript,name,path='curr.wav'):
     with open(path, 'rb') as file:
         file_data = file.read()
