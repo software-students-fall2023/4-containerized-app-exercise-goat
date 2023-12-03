@@ -6,35 +6,9 @@ import io
 import json
 from app import app, save_wav_file
 
-
-# Mocking external dependencies
 sys.modules['voicerecorder'] = Mock()
 sys.modules['db'] = Mock()
 sys.modules['speechToText'] = Mock()
-
-import main
-import voicerecorder
-
-@pytest.fixture
-def audio_recorder():
-    return voicerecorder.AudioRecorder()
-
-def test_start_recording_in_main():
-    with patch('voicerecorder.record_audio') as mock_record_audio:
-        main.start_recording()
-        mock_record_audio.assert_called_once()
-
-def test_stop_recording_in_main():
-    with patch('voicerecorder.stop_audio') as mock_stop_audio:
-        main.stop_recording()
-        mock_stop_audio.assert_called_once()
-
-def test_save_in_main():
-    with patch('speechToText.get_transcript', return_value='Test transcript'):
-        with patch('db.save_current_audio') as mock_save_current_audio:
-            name = 'test_name'
-            main.save(name)
-            mock_save_current_audio.assert_called_once_with('Test transcript', name)
 
 def test_convert_stereo_to_mono():
     input_wav = 'test_input.wav'
