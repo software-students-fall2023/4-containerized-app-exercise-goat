@@ -20,6 +20,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY --from=builder /app/4-containerized-app-exercise-goat/machine-learning-client /app
 
-EXPOSE 5000
+EXPOSE 3000
 
 CMD ["python3", "app.py"]
