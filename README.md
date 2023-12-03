@@ -1,3 +1,7 @@
 # Containerized App Exercise
 
-Build a containerized app that uses machine learning. See [instructions](./instructions.md) for details.
+How to run locally: 
+docker-compose build --no-cache
+docker-compose up
+
+then go to localhost:4000 to get the webapp
