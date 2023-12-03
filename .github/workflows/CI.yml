@@ -36,7 +36,7 @@ jobs:
           pipenv install -e .
       - name: Test with pytest
         run: |
-          pipenv run python -m pytest test_WA.py
+          pipenv run python -m pytest /web-app/test_WA.py
       - name: Test with pytest
         run: |
-          pipenv run python -m pytest test_ML.py
+          pipenv run python -m pytest /machine-learning-client/test_ML.py
