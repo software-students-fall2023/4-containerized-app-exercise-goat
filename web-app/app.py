@@ -11,6 +11,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 current_question = None
 attempts = 0
+correct_answer = ""
 
 def generate_question():
     global current_question
@@ -20,22 +21,11 @@ def generate_question():
     operation = random.choice(['+', '-'])
     correct_answer = str(eval(f"{num1} {operation} {num2}"))
 
-    # Generate three random wrong answers
-    wrong_answers = [str(random.randint(1, 18)) for _ in range(3)]
-
-    # Combine correct and wrong answers and shuffle them
-    answers = [correct_answer] + wrong_answers
-    random.shuffle(answers)
-
-    # Convert answers to dictionary format for easier JSON serialization
-    choices = {chr(65 + i): answers[i] for i in range(4)}
-
     current_question = {
         'num1': num1,
         'num2': num2,
         'operation': operation,
         'correct_answer': correct_answer,
-        'choices': choices
     }
 def get_transcript():
     target_url = 'http://mlc:3000/transcript'
@@ -80,8 +70,11 @@ def upload_audio():
         print('file uploaded successfully')
         transcript= get_transcript() or "no transcript"
         print(transcript)
-        url = f'/?transcript={transcript}'
-        response = make_response(jsonify({'transcript': transcript}))
+        if transcript == correct_answer:
+            isRight = "True"
+        else:
+            isRight = "False"
+        response = make_response(jsonify({'transcript': transcript, 'isRight': isRight}))
         return response
         #return render_template('LetterMath.html',current_question=current_question, transcript=transcript)
     else:
