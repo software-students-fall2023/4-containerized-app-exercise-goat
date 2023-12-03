@@ -19,6 +19,7 @@ def generate_question():
     num1 = random.randint(1, 9)
     num2 = random.randint(1, num1)
     operation = random.choice(['+', '-'])
+    global correct_answer
     correct_answer = str(eval(f"{num1} {operation} {num2}"))
 
     current_question = {
@@ -36,31 +37,9 @@ def get_transcript():
     return "there is an error fetching a transcript"
 @app.route('/')
 def index():
-    transcript=request.args.get('transcript')
-    if not transcript:
-        generate_question()
-    return render_template('LetterMath.html', current_question=current_question, transcript=transcript)
+    generate_question()
+    return render_template('LetterMath.html', current_question=current_question)
 
-@app.route('/check_answer', methods=['POST'])
-def check_answer():
-    global attempts
-    user_answer = request.form.get('answer')
-    correct_answer = current_question['correct_answer']
-
-    is_correct = user_answer == correct_answer
-
-    attempts += 1
-
-    if is_correct:
-        attempts = 0  # Reset attempts on correct answer
-        generate_question()  # Move to the next question
-        return jsonify({'is_correct': True, 'next_question': current_question})
-    elif attempts >= 3:
-        attempts = 0
-        generate_question()  # Move to the next question
-        return jsonify({'is_correct': False, 'next_question': current_question, 'max_attempts_reached': True})
-    else:
-        return jsonify({'is_correct': False, 'max_attempts_reached': False})
 @app.route('/upload-audio', methods=['POST'])
 def upload_audio():
     if request.method == "POST":
