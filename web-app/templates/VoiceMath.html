@@ -36,6 +36,15 @@
         
         .result {
             padding-left: 150px;
+            color: black;
+        }
+
+        .result.correct {
+            color: green;
+        }
+
+        .result.wrong {
+            color: red;
         }
 
         .button {
@@ -50,16 +59,14 @@
         <div id="current-question" class="current_question">
             {{ current_question.num1 }} {{ current_question.operation }} {{ current_question.num2 }} = ?
         </div>
-        <div class="answer">Your Answer:</div>
-        <div id="transcript"></div>
-        <div class="answer">Correct Answer:</div>
-        <div id="correct_answer"></div>
+        <div id="transcript" class="answer">Your Answer:</div>
+        <div id="correct_answer" class="answer">Correct Answer:</div>
 
         <div id="isRight" class="result"></div>
 
         <div id="button" class="button">
-            <button id="recordButton">Answer</button>
-            <button id="stopButton" disabled>Stop</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            <button id="recordButton">Start</button>
+            <button id="stopButton" disabled>Finish</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
             <button id="nextButton">Next Question</button>
         </div>
     </div>
@@ -121,6 +128,8 @@
                     const isRight = data.isRight;
                     const isRight_text = document.getElementById('isRight');
                     isRight_text.innerText = isRight;
+                    // Update the class based on correctness
+                    isRight_text.className = 'result ' + (isRight === 'Correct!' ? 'correct' : 'wrong');
 
                     const correct_answer_text = document.getElementById('correct_answer');
                     correct_answer_text.innerText = data.correct_answer;
