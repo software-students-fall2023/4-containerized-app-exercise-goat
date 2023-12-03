@@ -34,7 +34,7 @@
 <body>
     <div class="container">
         <h1>Letter Math</h1>
-        <p class="question">{{ current_question.num1 }} {{ current_question.operation }} {{ current_question.num2 }}?</p>
+        <div id ="current-question">{{ current_question.num1 }} {{ current_question.operation }} {{ current_question.num2 }}?</div>
         <form id="quizForm" action="{{ url_for('check_answer') }}" method="post" enctype="multipart/form-data">
             {% for key, value in current_question.choices.items() %}
                 <label>
