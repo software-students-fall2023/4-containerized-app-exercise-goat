@@ -36,7 +36,9 @@ jobs:
           pipenv install -e .
       - name: Test with pytest
         run: |
+          cd web-app
           pipenv run python -m pytest test_WA.py
       - name: Test with pytest
         run: |
+          cd machine-learning-client
           pipenv run python -m pytest test_ML.py
