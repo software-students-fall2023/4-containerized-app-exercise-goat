@@ -30,8 +30,12 @@
             text-align: center;
         }
 
-        .answer {
+        .info {
             padding-left: 150px;
+        }
+
+        .answer {
+            padding-left: 190px;
         }
         
         .result {
@@ -40,16 +44,23 @@
         }
 
         .result.correct {
+            text-align: center;
             color: green;
+            font-weight: bold;
+            font-size: 24px;
         }
 
         .result.wrong {
+            text-align: center;
             color: red;
+            font-weight: bold;
+            font-size: 24px;
         }
 
         .button {
             padding-left: 150px;
             padding-top: 100px;
+            position: fixed;
         }
     </style>
 </head>
@@ -59,8 +70,14 @@
         <div id="current-question" class="current_question">
             {{ current_question.num1 }} {{ current_question.operation }} {{ current_question.num2 }} = ?
         </div>
-        <div id="transcript" class="answer">Your Answer:</div>
-        <div id="correct_answer" class="answer">Correct Answer:</div>
+
+        <div class="info">Your Answer:</div>
+        <div id="transcript" class="answer"></div>
+
+        <br>
+
+        <div class="info">Correct Answer:</div>
+        <div id="correct_answer" class="answer"></div>
 
         <div id="isRight" class="result"></div>
 
