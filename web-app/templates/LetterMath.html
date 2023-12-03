@@ -31,7 +31,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <h1>Letter Math</h1>
@@ -43,11 +42,15 @@
                     {{ key }}. {{ value }}
                 </label><br>
             {% endfor %}
+            <label for="audioFile">Upload Recorded Audio:</label>
+            <input type="file" id="audioFile" name="audioFile" accept="audio/*" capture="microphone">
         </form>
         <div id="error-message" class="error-message"></div>
 
         <button id="recordButton">Record</button>
         <button id="stopButton" disabled>Stop</button>
+        <audio id="audioPlayback" controls></audio>
+        <div id="upload_button"></div>
     </div>
         <div>Your answer:</div>
         <div id="transcript"></div>
@@ -57,6 +60,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const recordButton = document.getElementById('recordButton');
             const stopButton = document.getElementById('stopButton');
+            const audioPlayback = document.getElementById('audioPlayback');
             let audioContext;
             let input;
             let rec;

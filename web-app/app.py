@@ -19,14 +19,24 @@ def generate_question():
     num2 = random.randint(1, num1)
     operation = random.choice(['+', '-'])
     correct_answer = str(eval(f"{num1} {operation} {num2}"))
-    
+
+    # Generate three random wrong answers
+    wrong_answers = [str(random.randint(1, 18)) for _ in range(3)]
+
+    # Combine correct and wrong answers and shuffle them
+    answers = [correct_answer] + wrong_answers
+    random.shuffle(answers)
+
+    # Convert answers to dictionary format for easier JSON serialization
+    choices = {chr(65 + i): answers[i] for i in range(4)}
+
     current_question = {
         'num1': num1,
         'num2': num2,
         'operation': operation,
         'correct_answer': correct_answer,
+        'choices': choices
     }
-
 def get_transcript():
     target_url = 'http://mlc:3000/transcript'
     response = requests.get(target_url)
@@ -34,7 +44,6 @@ def get_transcript():
         transcript = db.get_most_recent_transcript()
         return transcript
     return "there is an error fetching a transcript"
-
 @app.route('/')
 def index():
     transcript=request.args.get('transcript')
@@ -62,7 +71,6 @@ def check_answer():
         return jsonify({'is_correct': False, 'next_question': current_question, 'max_attempts_reached': True})
     else:
         return jsonify({'is_correct': False, 'max_attempts_reached': False})
-
 @app.route('/upload-audio', methods=['POST'])
 def upload_audio():
     if request.method == "POST":
@@ -75,9 +83,14 @@ def upload_audio():
         url = f'/?transcript={transcript}'
         response = make_response(jsonify({'transcript': transcript}))
         return response
+        #return render_template('LetterMath.html',current_question=current_question, transcript=transcript)
     else:
         return render_template("LetterMath.html",current_question=current_question)
-    
+    '''if audio_file:
+        save_path = os.path.join(app.config['UPLOAD_FOLDER'], 'audio.wav')
+        audio_file.save(save_path)
+
+        return jsonify({'message': 'Audio file uploaded successfully', 'transcription': 'transcription_result'})'''
 def check_file():
     audio = AudioSegment.from_file("uploads/blob")
     print("Channels:", audio.channels)
@@ -90,3 +103,5 @@ if __name__ == '__main__':
         os.makedirs(app.config['UPLOAD_FOLDER'])
     #convert_blob_file_to_wav()
     app.run(host='0.0.0.0', port=4000)
+
+
