@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Letter Math</title>
+    <title>Voice Math</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,48 +17,75 @@
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 10px;
+        }
+
+        .h1 {
             text-align: center;
         }
 
-        .question {
+        .current_question {
             font-size: 24px;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
+            white-space: pre-line;
+            text-align: center;
         }
 
+        .answer {
+            padding-left: 150px;
+        }
+        
+        .result {
+            padding-left: 150px;
+        }
+
+        .button {
+            padding-left: 150px;
+            padding-top: 100px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Letter Math</h1>
-        <div id ="current-question">{{ current_question.num1 }} {{ current_question.operation }} {{ current_question.num2 }}?</div>
-        
-        <div id="error-message" class="error-message"></div>
-
-        <button id="recordButton">Record</button>
-        <button id="stopButton" disabled>Stop</button>
-        
-    </div>
-        <div>Your answer:</div>
+        <h1 class="h1">Voice Math</h1>
+        <div id="current-question" class="current_question">
+            {{ current_question.num1 }} {{ current_question.operation }} {{ current_question.num2 }} = ?
+        </div>
+        <div class="answer">Your Answer:</div>
         <div id="transcript"></div>
-        <div id="isRight"></div>
+        <div class="answer">Correct Answer:</div>
         <div id="correct_answer"></div>
+
+        <div id="isRight" class="result"></div>
+
+        <div id="button" class="button">
+            <button id="recordButton">Answer</button>
+            <button id="stopButton" disabled>Stop</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            <button id="nextButton">Next Question</button>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/gh/mattdiamond/Recorderjs@08e7abd9/dist/recorder.js"></script>
     <script>
-        //this method of gathering audio input is inspired by this post: https://stackoverflow.com/questions/60032983/record-voice-with-recorder-js-and-upload-it-to-python-flask-server-but-wav-file
         document.addEventListener('DOMContentLoaded', () => {
             const recordButton = document.getElementById('recordButton');
             const stopButton = document.getElementById('stopButton');
-            
+
             let audioContext;
             let input;
             let rec;
             let gumStream;
-            let audioChunks = [];    
+            let audioChunks = [];
+
+            // Event listener for the "Record" button
             recordButton.addEventListener('click', () => {
+                // Disable the record button and enable the stop button
                 recordButton.disabled = true;
                 stopButton.disabled = false;
+
+                // Request access to the user's microphone
                 navigator.mediaDevices.getUserMedia({ audio: true, video: false })
                     .then(stream => {
+                        // Create an audio context and set up recording
                         audioContext = new AudioContext();
                         gumStream = stream;
                         input = audioContext.createMediaStreamSource(stream);
@@ -67,13 +94,15 @@
                     })
                     .catch(e => console.error(e));
             });
-    
+
+            // Function to stop recording and send the audio to the server
             function stop_record() {
                 rec.stop();
                 gumStream.getAudioTracks()[0].stop();
                 rec.exportWAV(sendAudioToServer);
             }
-    
+
+            // Function to send audio data to the server using fetch API
             function sendAudioToServer(blob) {
                 const formData = new FormData();
                 formData.append('audio_data', blob, 'audio.wav');
@@ -84,23 +113,37 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    const transcript=data.transcript;
-                    const isRight=data.isRight;
-                    const isRight_text = document.getElementById('isRight');
-                    isRight_text.innerText=isRight;
-                    const correct_answer_text = document.getElementById('correct_answer');
-                    correct_answer_text.innerText=data.correct_answer;
-                    console.log('received transcript');
+                    // Display the transcript, correctness, and correct answer
+                    const transcript = data.transcript;
                     const transcript_text = document.getElementById('transcript');
-                    transcript_text.innerText=transcript;
+                    transcript_text.innerText = transcript;
+
+                    const isRight = data.isRight;
+                    const isRight_text = document.getElementById('isRight');
+                    isRight_text.innerText = isRight;
+
+                    const correct_answer_text = document.getElementById('correct_answer');
+                    correct_answer_text.innerText = data.correct_answer;
+
+                    console.log('received transcript');
                 })
                 .catch(error => console.error(error));
             }
-    
+
+            // Event listener for the "Stop" button
             stopButton.addEventListener('click', () => {
+                // Enable the record button and disable the stop button
                 recordButton.disabled = false;
                 stopButton.disabled = true;
+
+                // Stop recording and send the audio to the server
                 stop_record();
+            });
+
+            // Event listener for the "Next Question" button
+            nextButton.addEventListener('click', () => {
+                // Reload the page when the button is clicked
+                location.reload();
             });
         });
     </script>
