@@ -1,11 +1,12 @@
 from google.cloud import speech
 from pydub import AudioSegment
 import io
+
 def convert_stereo_to_mono(input_wav, output_wav):
     audio = AudioSegment.from_wav(input_wav)
 
     audio = audio.set_channels(1)
-    
+
     audio.export(output_wav, format="wav")
 def run_quickstart(local_file_path) -> speech.RecognizeResponse:
     # Instantiates a client

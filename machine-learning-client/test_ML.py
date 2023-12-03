@@ -1,9 +1,10 @@
 import sys
 import pytest
 from unittest.mock import patch, Mock
-from google.cloud import speech
-from pydub import AudioSegment
+from speechToText import run_quickstart, convert_stereo_to_mono
 import io
+import json
+from app import app, save_wav_file
 
 
 # Mocking external dependencies
@@ -35,38 +36,6 @@ def test_save_in_main():
             main.save(name)
             mock_save_current_audio.assert_called_once_with('Test transcript', name)
 
-def convert_stereo_to_mono(input_wav, output_wav):
-    audio = AudioSegment.from_wav(input_wav)
-    audio = audio.set_channels(1)
-    audio.export(output_wav, format="wav")
-
-def run_quickstart(local_file_path) -> speech.RecognizeResponse:
-    client = speech.SpeechClient()
-
-    with io.open(local_file_path, "rb") as f:
-        content = f.read()
-
-    audio = {"content": content}
-
-    config = speech.RecognitionConfig(
-        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=48000,
-        language_code="en-US",
-    )
-
-    response = client.recognize(config=config, audio=audio)
-
-    output = ""
-    for result in response.results:
-        output += f"{result.alternatives[0].transcript}"
-    return output 
-
-def get_transcript():
-    input_wav = 'uploads/audio.wav'
-    output_wav = 'curr.wav'
-    convert_stereo_to_mono(input_wav, output_wav)
-    return run_quickstart(output_wav)
-
 def test_convert_stereo_to_mono():
     input_wav = 'test_input.wav'
     output_wav = 'test_output.wav'
@@ -85,3 +54,31 @@ def test_run_quickstart():
         with patch.object(mock_client_instance, 'recognize') as mock_recognize:
             with patch('builtins.open', return_value=io.StringIO()) as mock_open:
                 run_quickstart(local_file_path)
+
+@pytest.fixture
+def client():
+    app.config['TESTING'] = True
+    with app.test_client() as client:
+        yield client
+
+@pytest.fixture
+def mock_get_transcript(monkeypatch):
+    def mock_get_transcript_function():
+        return "Mocked transcript"
+    
+    monkeypatch.setattr("app.speechToText.get_transcript", mock_get_transcript_function)
+
+@pytest.fixture
+def mock_save_transcript(monkeypatch):
+    def mock_save_transcript_function(transcript, Id):
+        return None  # Mock the save_transcript function
+    
+    monkeypatch.setattr("app.db.save_transcript", mock_save_transcript_function)
+
+def test_recognize_and_save(client, mock_get_transcript, mock_save_transcript):
+    response = client.get('/transcript?Id=1')
+
+    assert response.status_code == 200
+    assert json.loads(response.data.decode('utf-8')) == {'message': 'transcript saved!'}
+
+
