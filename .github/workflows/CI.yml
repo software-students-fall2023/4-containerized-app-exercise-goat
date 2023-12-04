@@ -40,6 +40,7 @@ jobs:
         run: |
           cd web-app
           pipenv run python -m pytest test_WA.py
+          pipenv run python app.py
       - name: Test with pytest
         run: |
           cd machine-learning-client
