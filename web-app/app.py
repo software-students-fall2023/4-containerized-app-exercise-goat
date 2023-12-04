@@ -65,7 +65,7 @@ def upload_audio():
     response = make_response(jsonify({'transcript': transcript, 'isRight': isRight, 'correct_answer': correct_answer}))
     return response
 @app.route('/cheat', methods=['GET'])
-def show_answer():
+def give_hint():
     '''it will secretly tell you the answer'''
     message ='wow you have found me. I will give a hint'
     possible_answers = ['0','1','2','3','4','5','6','7','8','9']
@@ -75,6 +75,12 @@ def show_answer():
         else:
             hint = 'the answer is more than 10!'
         response = make_response(jsonify({'message': message, 'hint':hint}))
+    return response 
+@app.route('/gimmeanswer', methods=['GET'])
+def show_answer():
+    '''it will secretly tell you the answer'''
+    assert(correct_answer!="")
+    response = make_response(jsonify({'answer':correct_answer}))
     return response 
 @app.route('/instruction', methods=['GET'])
 def show_instruction():
