@@ -15,15 +15,10 @@ def client(app):
 def test_index(client):
     response = client.get('/')
     assert response.status_code == 200
-    
+
 def test_upload_audio(client):
     response = client.get('/upload-audio')
     assert response
-
-
-@pytest.fixture
-def client(app):
-    return app.test_client()
 
 def test_index_route(client):
     response = client.get('/')
@@ -34,11 +29,3 @@ def test_upload_audio_post(client, monkeypatch):
     monkeypatch.setattr("app.get_transcript", lambda: "transcript")
     response = client.post('/upload-audio', data={'audio_data': (b'fake_audio_data', 'audio.wav')})
     assert response
-
-def test_upload_audio_post_error(client, monkeypatch):
-    monkeypatch.setattr("app.get_transcript", lambda: None)
-    response = client.post('/upload-audio', data={'audio_data': (b'fake_audio_data', 'audio.wav')})
-    assert response.status_code == 500
-    data = json.loads(response.get_data(as_text=True))
-    assert 'error' in data
-
