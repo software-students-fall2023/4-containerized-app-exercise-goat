@@ -1,30 +1,27 @@
+'''import modules'''
 import random
 import os
 import db
 import requests
-from flask import Flask, jsonify, request, render_template, redirect, url_for, make_response
-from pydub import AudioSegment
+from flask import Flask, jsonify, request, render_template,  make_response
 
-# Create a Flask web application instance
-app = Flask(__name__, template_folder='templates')
 
+app=Flask(__name__, template_folder='templates')
 # Set up the upload folder for audio files
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+current_question = None # pylint: disable=invalid-name
+correct_answer = "" # pylint: disable=invalid-name
 
-# Initialize global variables
-current_question = None
-correct_answer = ""
-
-# Function to generate a random addition or subtraction problem and set it as the current question
 def generate_question():
-    global current_question
+    '''Function to generate a random addition 
+    or subtraction problem and set it as the current question'''
+    global current_question # pylint: disable=global-statement
     num1 = random.randint(1, 9)
     num2 = random.randint(1, num1)
     operation = random.choice(['+', '-'])
-    global correct_answer
-    correct_answer = str(eval(f"{num1} {operation} {num2}"))
-
+    global correct_answer # pylint: disable=global-statement
+    correct_answer = str(eval(f"{num1} {operation} {num2}"))# pylint: disable=eval-used
     current_question = {
         'num1': num1,
         'num2': num2,
@@ -32,46 +29,42 @@ def generate_question():
         'correct_answer': correct_answer,
     }
 
-# Function to get the most recent transcript from an external service
 def get_transcript():
+    '''Function to get the most recent transcript from an external service'''
     target_url = 'http://mlc:3000/transcript'
-    response = requests.get(target_url)
+    response = requests.get(target_url)# pylint: disable=missing-timeout
     if response:
-        transcript = db.get_most_recent_transcript()  # Assuming this function retrieves the transcript from the database
+        transcript = db.get_most_recent_transcript()
         return transcript
     return "There is an error fetching a transcript"
 
-# Define a route for the home page
 @app.route('/')
 def index():
+    '''Define a route for the home page'''
     generate_question()
     return render_template('VoiceMath.html', current_question=current_question)
 
-# Define a route for handling audio file uploads
 @app.route('/upload-audio', methods=['POST'])
 def upload_audio():
-    if request.method == "POST":
-        # Save the uploaded audio file and print a success message
-        f = request.files['audio_data']
-        with open('uploads/audio.wav', 'wb') as audio:
-            f.save(audio)
-        print('File uploaded successfully')
+    '''route for handling audio file uploads'''
+    # Save the uploaded audio file and print a success message
+    f = request.files['audio_data']
+    with open('uploads/audio.wav', 'wb') as audio:
+        f.save(audio)
+    print('File uploaded successfully')
 
-        # Get the transcript and compare it with the correct answer
-        transcript = get_transcript() or "Please say again"
-        print(transcript)
-        print(correct_answer)
-        transcript = str(transcript.strip())
-        if transcript == correct_answer:
-            isRight = "Correct!"
-        else:
-            isRight = "Wrong!"
-
-        # Create a JSON response with the transcript, correctness, and correct answer
-        response = make_response(jsonify({'transcript': transcript, 'isRight': isRight, 'correct_answer': correct_answer}))
-        return response
+    # Get the transcript and compare it with the correct answer
+    transcript = get_transcript() or "Please say again"
+    transcript = str(transcript.strip())
+    if transcript == correct_answer:
+        isRight = "Correct!" # pylint: disable=invalid-name
     else:
-        return render_template("VoiceMath.html", current_question=current_question)
+        isRight = "Wrong!" # pylint: disable=invalid-name
+    # Create a JSON response with the transcript,
+    # correctness, and correct answer
+    # pylint: disable=line-too-long
+    response = make_response(jsonify({'transcript': transcript, 'isRight': isRight, 'correct_answer': correct_answer}))
+    return response
 
 def create_app():
     return app

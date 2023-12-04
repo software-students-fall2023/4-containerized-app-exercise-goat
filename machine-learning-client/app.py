@@ -1,29 +1,23 @@
+'''make a flask based app'''
 from flask import Flask, jsonify, request, make_response
 import db
 import speechToText
-import wave 
 
 app = Flask(__name__)
 
 @app.route('/transcript', methods=['GET'])
-def recognize_and_save(Id=1):
-    Id = request.args.get('Id')
-    #print(Id)
+def recognize_and_save(my_id=1):
+    '''fetch the transcript from the database'''
+    my_id = request.args.get('Id')
     transcript = speechToText.get_transcript()
-    #print(transcript)
-    db.save_transcript(transcript,Id)
+    db.save_transcript(transcript,my_id)
     response = make_response(jsonify({'message': 'transcript saved!'}))
     return response
 
-def save_wav_file(audio_data, output_file_path='input.wav'):
-    with wave.open(output_file_path, 'wb') as wav_file:
-        wav_file.setnchannels(1)  
-        wav_file.setsampwidth(2) 
-        wav_file.setframerate(44100)  
-        wav_file.writeframes(audio_data)
 @app.route('/',methods=['GET'])
 def test():
+    '''for testing purpose, this will display a message when a connection is successful'''
     response = make_response(jsonify({'message': 'hi'}))
-    return response 
+    return response
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000)
