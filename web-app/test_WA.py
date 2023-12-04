@@ -21,3 +21,4 @@ def test_upload_audio(client):
 @pytest.fixture
 def client(app):
     return app.test_client()
+
