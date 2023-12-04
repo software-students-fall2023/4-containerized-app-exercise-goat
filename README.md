@@ -70,5 +70,6 @@ web-app
 ![Local Image](coverage2.png)
 
 
+which gives over 80% overage of client code overall, as required in the instructions.
 ## Additional Notes For Graders
 Our web app frontend uses a library that is written by an individual developer who currently published the code here:  https://cdn.jsdelivr.net/gh/mattdiamond/Recorderjs@08e7abd9/dist/recorder.js. It's possible that the program would stop running if the author decide to put the code somewhere else. In that case, we made a copy of the source code and we can consider using that copy. If that ever turns out to be the case, please let us know. 
