@@ -26,8 +26,8 @@ def generate_question():
     operation = random.choice(["+", "-"])
     global correct_answer  # pylint: disable=global-statement
     correct_answer = str(
-        eval(f"{num1} {operation} {num2}")
-    )  # pylint: disable=eval-used
+        eval(f"{num1} {operation} {num2}")# pylint: disable=eval-used
+    )
     current_question = {
         "num1": num1,
         "num2": num2,
