@@ -12,6 +12,7 @@ google-cloud = "*"
 pydub = "*"
 requests = "*"
 pytest = "*"
+pytest-flask = "*"
 
 [dev-packages]
 

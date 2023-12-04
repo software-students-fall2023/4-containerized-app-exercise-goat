@@ -4,7 +4,7 @@
 ## Description/How To Use
 
 Voice Math is a web app which would generate easy math questions and gather your answer through microphone! 
-Upon starting, a math question would show up on the screen. You can click the 'start' button to start recording your voice, and click 'finish' to stop. Once you click finish, the audio will be uploaded to the server and check its correctness. A message will be display to indicate your (transcribed) answer and whether you get it right. You can also click 'next question' to get another question. 
+Upon starting, a math question would show up on the screen. You can click the 'start' button to start recording your voice, and click 'finish' to stop. Once you click finish, the audio will be uploaded to the server and check its correctness. A message will be displayed to show your (transcribed) answer and whether you get it right. You can also click 'next question' to get another question. 
 This app uses google cloud speech-to-text api. 
 This app is especially designed for kids who is not good at addition or subtraction under ten but fluent with docker and git. 
 
