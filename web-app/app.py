@@ -58,7 +58,7 @@ def upload_audio():
         print('File uploaded successfully')
 
         # Get the transcript and compare it with the correct answer
-        transcript = get_transcript() or "no transcript"
+        transcript = get_transcript() or "Please say again"
         print(transcript)
         print(correct_answer)
         transcript = str(transcript.strip())
