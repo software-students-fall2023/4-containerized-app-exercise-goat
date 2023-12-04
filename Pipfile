@@ -11,6 +11,7 @@ pymongo = "*"
 google-cloud = "*"
 pydub = "*"
 requests = "*"
+pytest = "*"
 
 [dev-packages]
 
