@@ -1,5 +1,6 @@
 import pytest
-from app import create_app
+from app import create_app, get_transcript
+from db import get_most_recent_transcript
 import json
 
 @pytest.fixture
@@ -20,6 +21,12 @@ def test_upload_audio(client):
     response = client.get('/upload-audio')
     assert response
 
+
+def test_connection(client):
+    response=client.get('/test')
+    assert response.status_code == 200
+
+
 def test_index_route(client):
     response = client.get('/')
     assert response.status_code == 200
@@ -29,3 +36,16 @@ def test_upload_audio_post(client, monkeypatch):
     monkeypatch.setattr("app.get_transcript", lambda: "transcript")
     response = client.post('/upload-audio', data={'audio_data': (b'fake_audio_data', 'audio.wav')})
     assert response
+
+def test_cheat(client):
+    response = client.get('/cheat')
+    assert response.status_code == 200
+def test_instruction(client):
+    response = client.get('/instruction')
+    assert response
+    assert response.status_code == 200
+
+def test_db_error():
+    message = get_most_recent_transcript()
+    assert(message == None)
+
