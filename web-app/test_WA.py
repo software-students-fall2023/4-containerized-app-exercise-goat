@@ -40,6 +40,9 @@ def test_upload_audio_post(client, monkeypatch):
 def test_cheat(client):
     response = client.get('/cheat')
     assert response.status_code == 200
+def test_show_answer(client):
+    response = client.get('/gimmeanswer')
+    assert response.status_code == 200
 def test_instruction(client):
     response = client.get('/instruction')
     assert response
