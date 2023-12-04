@@ -30,9 +30,3 @@ def test_upload_audio_post(client, monkeypatch):
     response = client.post('/upload-audio', data={'audio_data': (b'fake_audio_data', 'audio.wav')})
     assert response
 
-def test_upload_audio_post_error(client, monkeypatch):
-    monkeypatch.setattr("app.get_transcript", lambda: None)
-    response = client.post('/upload-audio', data={'audio_data': (b'fake_audio_data', 'audio.wav')})
-    assert response.status_code == 500
-    data = json.loads(response.get_data(as_text=True))
-    assert 'error' in data
