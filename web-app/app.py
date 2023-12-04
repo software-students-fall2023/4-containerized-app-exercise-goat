@@ -1,3 +1,4 @@
+# pylint: disable=no-member
 """Import modules"""
 import random
 import os
@@ -6,9 +7,6 @@ from flask import Flask, jsonify, request, render_template, make_response
 import db
 
 
-# pylint: disable=line-too-long
-# pylint: disable=missing-function-docstring
-# pylint: disable=wrong-import-order
 
 app = Flask(__name__, template_folder="templates")
 # Set up the upload folder for audio files
@@ -19,7 +17,8 @@ correct_answer = ""  # pylint: disable=invalid-name
 
 
 def generate_question():
-    """Function to generate a random addition or subtraction problem and set it as the current question"""
+    """Function to generate a random addition or 
+    subtraction problem and set it as the current question"""
     global current_question  # pylint: disable=global-statement
     num1 = random.randint(1, 9)
     num2 = random.randint(1, num1)
@@ -135,6 +134,7 @@ def test_connection():
 
 
 def create_app():
+    '''return an app object'''
     return app
 
 

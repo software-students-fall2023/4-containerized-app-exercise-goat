@@ -1,5 +1,6 @@
-"""use Google Cloud Speech-To-Text API"""
 # pylint: disable=invalid-name
+# pylint: disable=no-member
+"""use Google Cloud Speech-To-Text API"""
 import io
 from google.cloud import speech
 from pydub import AudioSegment
