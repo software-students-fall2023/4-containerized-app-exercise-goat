@@ -1,4 +1,5 @@
-[![CI/CD](https://github.com/software-students-fall2023/4-containerized-app-exercise-goat/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/software-students-fall2023/4-containerized-app-exercise-goat/actions/workflows/CI.yml)
+[![CI](https://github.com/software-students-fall2023/4-containerized-app-exercise-goat/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/software-students-fall2023/4-containerized-app-exercise-goat/actions/workflows/CI.yml)
+[![Deploy](https://github.com/software-students-fall2023/4-containerized-app-exercise-goat/actions/workflows/CD.yml/badge.svg)](https://github.com/software-students-fall2023/4-containerized-app-exercise-goat/actions/workflows/CD.yml)
 # Voice Math
 
 ## Description/How To Use
