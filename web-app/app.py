@@ -73,14 +73,11 @@ def upload_audio():
     else:
         return render_template("VoiceMath.html", current_question=current_question)
 
-# Function to check the properties of an audio file
-def check_file():
-    audio = AudioSegment.from_file("uploads/blob")
-    print("Channels:", audio.channels)
-    print("Sample Width (bytes):", audio.sample_width)
-    print("Sample Rate (Hz):", audio.frame_rate)
+def create_app():
+    return app
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
     app.run(host='0.0.0.0', port=4000)
+
