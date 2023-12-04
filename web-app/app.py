@@ -6,10 +6,7 @@ import requests
 from flask import Flask, jsonify, request, render_template,  make_response
 
 
-def create_app():
-    '''Create a Flask web application instance'''
-    return Flask(__name__, template_folder='templates')
-app= create_app()
+app=Flask(__name__, template_folder='templates')
 # Set up the upload folder for audio files
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -68,7 +65,12 @@ def upload_audio():
     # pylint: disable=line-too-long
     response = make_response(jsonify({'transcript': transcript, 'isRight': isRight, 'correct_answer': correct_answer}))
     return response
+
+def create_app():
+    return app
+
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
     app.run(host='0.0.0.0', port=4000)
+
