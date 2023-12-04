@@ -6,6 +6,13 @@ name = "pypi"
 [packages]
 pylint = "*"
 black = "*"
+flask = "*"
+pymongo = "*"
+google-cloud = "*"
+pydub = "*"
+requests = "*"
+pytest = "*"
+pytest-flask = "*"
 
 [dev-packages]
 

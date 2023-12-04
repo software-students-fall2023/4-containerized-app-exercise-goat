@@ -1,0 +1,5 @@
+pymongo
+flask
+pydub
+requests
+fuzzywuzzy

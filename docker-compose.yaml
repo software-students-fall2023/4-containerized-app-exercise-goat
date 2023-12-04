@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  webapp:
+    build: ./web-app
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+      - mlc
+    volumes:
+      - uploadedfiles:/app/uploads
+  mlc:
+    build: ./machine-learning-client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    volumes:
+      - uploadedfiles:/app/uploads
+  db:
+    image: mongo
+    ports:
+      - "27017:27017"
+volumes:
+  uploadedfiles:

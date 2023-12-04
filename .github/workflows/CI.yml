@@ -1,0 +1,46 @@
+name: CI
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    types: [opened, closed]
+    branches: [main, master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install --user pipenv
+          pipenv --python ${{ matrix.python-version }}
+          sudo apt-get update
+          sudo apt-get install -y portaudio19-dev
+          pipenv install pytest
+          pipenv install flask
+          pipenv install PyAudio
+          pipenv install google-cloud-speech
+          pipenv install pydub
+          pipenv install pymongo
+          pipenv install beautifulsoup4
+          pipenv install --dev
+      - name: Turn on 'editable' mode
+        run: |
+          pipenv install -e .
+      - name: Test with pytest
+        run: |
+          cd web-app
+          pipenv run python -m pytest test_WA.py
+      - name: Test with pytest
+        run: |
+          cd machine-learning-client
+          pipenv run python -m pytest test_ML.py
