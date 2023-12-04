@@ -7,7 +7,6 @@ from flask import Flask, jsonify, request, render_template, make_response
 import db
 
 
-
 app = Flask(__name__, template_folder="templates")
 # Set up the upload folder for audio files
 UPLOAD_FOLDER = "uploads"
@@ -17,7 +16,7 @@ correct_answer = ""  # pylint: disable=invalid-name
 
 
 def generate_question():
-    """Function to generate a random addition or 
+    """Function to generate a random addition or
     subtraction problem and set it as the current question"""
     global current_question  # pylint: disable=global-statement
     num1 = random.randint(1, 9)
@@ -25,7 +24,7 @@ def generate_question():
     operation = random.choice(["+", "-"])
     global correct_answer  # pylint: disable=global-statement
     correct_answer = str(
-        eval(f"{num1} {operation} {num2}")# pylint: disable=eval-used
+        eval(f"{num1} {operation} {num2}")  # pylint: disable=eval-used
     )
     current_question = {
         "num1": num1,
@@ -134,7 +133,7 @@ def test_connection():
 
 
 def create_app():
-    '''return an app object'''
+    """return an app object"""
     return app
 
 
