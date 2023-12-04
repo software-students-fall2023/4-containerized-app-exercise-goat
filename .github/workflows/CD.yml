@@ -14,4 +14,12 @@ jobs:
         uses: actions/checkout@v2
       - name: Deploy to Digital Ocean
         run: |
-          sshpass -p 'PassWord1234Yeah' ssh root@104.131.167.165 "cd 4-containerized-app-exercise-goat && git pull origin main && docker-compose down && docker-compose build --no-cache && docker-compose up "
+          mkdir -p ~/.ssh
+          ssh-keyscan -H 104.131.167.165 >> ~/.ssh/known_hosts
+          sshpass -p 'PassWord1234Yeah' ssh -o StrictHostKeyChecking=no root@104.131.167.165 "
+          cd 4-containerized-app-exercise-goat && 
+          docker-compose down && 
+          git pull origin main && 
+          docker-compose build --no-cache && 
+          docker-compose up 
+        "
