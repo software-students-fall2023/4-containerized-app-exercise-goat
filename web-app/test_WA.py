@@ -1,11 +1,13 @@
 # pylint: disable=redefined-outer-name
 # pylint: disable=invalid-name
+# pylint: disable=unused-import
 # pylint: disable=singleton-comparison
 # pylint: disable=no-member
 # pylint: disable=no-name-in-module
 
 """import modules"""
 import pytest
+import pytest_flask
 from app import create_app
 from db import get_most_recent_transcript
 
